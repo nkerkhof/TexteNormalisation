@@ -8,7 +8,7 @@ import time
 from keras.models import Sequential
 from keras.layers import Dense
 
-
+####TODO: Vectoletter; essayer un reseau de neurones ####
 
 def loadFiletxt(filename):
 	with open(filename, 'r') as f:
@@ -39,25 +39,15 @@ def txt_to_train_data(txt):
 	return np.array(result)
 
 
-txt = loadFiletxt("gutenberg/pg31117.txt")
-txt_size = len(txt)
+x_train = loadFiletxt("data/tokenized/8692-0-tokenized.txt")+loadFiletxt("data/tokenized/8693-0-tokenized.txt")+loadFiletxt("data/tokenized/13737-0-tokenized.txt")
+y_train = loadFiletxt("data/normalised/8692-0-normalised.txt")+loadFiletxt("data/normalised/8692-0-normalised.txt")+loadFiletxt("data/normalised/8692-0-normalised.txt")
 
-#print(txt[0:20])
-#print(txt_to_train_data(txt[0:20]))
+x_test = loadFiletxt("data/tokenized/14688-0-tokenized.txt")
+y_test = loadFiletxt("data/normalised/14688-0-normalised.txt")
+
 start = time.time()
-txt_to_train_data(txt)
+txt_to_train_data(x_train)
 print(time.time()-start)
-print(txt_size)
-
-'''
-x_train = ...avantNorm...
-y_train = ...apresNorm...
-
-x_test = .avantNorm.
-y_test = .apresNorm.
-'''
-
-
 
 
 
