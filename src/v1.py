@@ -9,6 +9,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 
 ####TODO: Vectoletter; essayer un reseau de neurones ####
+######ATTENTION A LA MEMOIRE#####
 
 def loadFiletxt(filename):
 	with open(filename, 'r') as f:
