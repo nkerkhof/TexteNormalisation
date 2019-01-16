@@ -74,8 +74,8 @@ test = loadFiletxt("data/tokenized/8692-0-tokenized.txt")
 #test = loadFiletxt("data/rawdata/gutenberg/8692-0.txt")
 
 f = open('data/test_after.txt','w+')
-f.write(sentencePerLine(test))
-f.close()
+f.write(sentencePerLine(test)
+
 	
 		
 
