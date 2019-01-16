@@ -3,35 +3,53 @@
 import numpy as np
 np.set_printoptions(threshold=np.inf)
 
-import time
-
-from keras.models import Sequential
-from keras.layers import Dense
-
-
-from keras.models import Model
-from keras.layers import Input, LSTM, Dense
 import numpy as np
 
 ####TODO: Vectoletter; essayer un reseau de neurones ####
 ######ATTENTION A LA MEMOIRE#####
 
+def delStartAndEnd(filename, result):
+    f = open(filename,"r", encoding="utf8")
+    lines = f.readlines()
+    f.close()
+    f = open(result,"w", encoding="utf8")
+    
+    i=0
+    
+    while lines[i].startswith("*** START OF") != True :
+        i = i+1
+    
+    i = i+1
+    
+    while lines[i].startswith("*** END OF") != True :
+        f.write(lines[i])
+        i = i+1
+        
+    f.close()
+
 def loadFiletxt(filename):
 	with open(filename, 'r') as f:
 		return f.read()
 
-def sentencePerLine(txt):
+def sentencePerLine(filename):
+	f = open(filename,"r", encoding="utf8")
+	txt = f.read()
+	f.close()
+	f = open(filename,"w", encoding="utf8")
 	index = 0
 	while index < len(txt):
 		if txt[index] == '\n':
-			txt = txt[:index]+txt[index+1:]
+			txt = txt[:index]+" "+txt[index+1:]
 		else:
-			if txt[index] == '.':
+			if txt[index] == '.' or txt[index] == '?' or txt[index] == '!':
 				txt = txt[:index+1]+'\n'+txt[index+1:]
 				index = index+2
 			else:
 				index = index+1
-	return txt
+
+	f.write(txt)
+	f.close()
+    
 			
 
 
@@ -59,6 +77,14 @@ def txt_to_train_data(txt):
 	return np.array(result)
 
 
+#filename = "..\\data\\rawdata\\gutenberg\\8692-0.txt"
+filename = "test-tokenized.txt"
+#result = "test-tokenized-retest-ensuite.txt"
+
+#delStartAndEnd(filename, result)
+sentencePerLine(filename)
+
+
 
 #x_train = loadFiletxt("data/tokenized/8692-0-tokenized.txt")#+loadFiletxt("data/tokenized/8693-0-tokenized.txt")+loadFiletxt("data/tokenized/13737-0-tokenized.txt")
 #y_train = loadFiletxt("data/normalised/8692-0-normalised.txt")#+loadFiletxt("data/normalised/8692-0-normalised.txt")+loadFiletxt("data/normalised/8692-0-normalised.txt")
@@ -68,7 +94,7 @@ def txt_to_train_data(txt):
 
 
 #txt_to_train_data(x_train)
-
+'''
 test = loadFiletxt("data/tokenized/8692-0-tokenized.txt")
 #test = loadFiletxt("data/normalised/8692-0-normalised.txt")
 #test = loadFiletxt("data/rawdata/gutenberg/8692-0.txt")
@@ -76,7 +102,7 @@ test = loadFiletxt("data/tokenized/8692-0-tokenized.txt")
 f = open('data/test_after.txt','w+')
 f.write(sentencePerLine(test))
 f.close()
-	
+	'''
 		
 
 
