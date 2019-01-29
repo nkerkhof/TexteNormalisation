@@ -96,7 +96,7 @@ txt = loadFiletxt("data/test/8692_v1.txt")
 txt = sentencePerLine(txt)
 txt = delEmptyLines(txt)
 
-f=open('data/test_after.txt','w+')
+f=open('data/test/test_after.txt','w+')
 
 f.write(txt)
 f.close()

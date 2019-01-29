@@ -9,6 +9,10 @@ import numpy as np
 ####TODO: Vectoletter; essayer un reseau de neurones ####
 ######ATTENTION A LA MEMOIRE#####
 
+# python src/v1.py
+#  bash irisa-text-normalizer-master/bin/fr/generic-normalisation.sh data/test/test_after.txt > data/test/test_after_norm1.txt
+# perl irisa-text-normalizer-master/bin/fr/specific-normalisation.pl irisa-text-normalizer-master/cfg/nlp_modified.cfg data/test/test_after_norm1.txt > data/test/test_after_norm2.txt
+
 def delStartAndEnd(filename, result_filename):
     f = open(filename,"r")
     lines = f.readlines()
