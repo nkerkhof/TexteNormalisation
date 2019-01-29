@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import time
 np.set_printoptions(threshold=np.inf)
 
 import numpy as np
@@ -8,11 +9,11 @@ import numpy as np
 ####TODO: Vectoletter; essayer un reseau de neurones ####
 ######ATTENTION A LA MEMOIRE#####
 
-def delStartAndEnd(filename, result):
-    f = open(filename,"r", encoding="utf8")
+def delStartAndEnd(filename, result_filename):
+    f = open(filename,"r")
     lines = f.readlines()
     f.close()
-    f = open(result,"w", encoding="utf8")
+    f = open(result_filename,"w")
     
     i=0
     
@@ -31,25 +32,35 @@ def loadFiletxt(filename):
 	with open(filename, 'r') as f:
 		return f.read()
 
-def sentencePerLine(filename):
-	f = open(filename,"r", encoding="utf8")
-	txt = f.read()
-	f.close()
-	f = open(filename,"w", encoding="utf8")
-	index = 0
-	while index < len(txt):
-		if txt[index] == '\n':
-			txt = txt[:index]+" "+txt[index+1:]
-		else:
-			if txt[index] == '.' or txt[index] == '?' or txt[index] == '!':
-				txt = txt[:index+1]+'\n'+txt[index+1:]
-				index = index+2
-			else:
-				index = index+1
 
-	f.write(txt)
-	f.close()
-    
+def sentencePerLine(txt):
+	index = 1
+	while index < len(txt)-1:
+		if txt[index] == '\n':
+			if (txt[index-1] == '.' or txt[index-1] == '!' or txt[index-1] == '?') and txt[index+1]=='\n':
+				txt = txt[:index]+txt[index+1:]
+				index = index + 2
+			else:
+				txt = txt[:index]+" "+txt[index+1:]
+				index = index + 1
+		else:
+			index = index + 1
+	if txt[0]=='\n':
+		txt = txt[1:]
+	if txt[-1]=='\n':
+		txt = txt[:-1]
+	return txt
+			
+		
+def delEmptyLines(txt):
+	index = 0
+	while index < len(txt)-1:
+		if txt[index]=='\n' and txt[index+1]=='\n':
+			txt = txt[:index+1]+txt[index+2:]
+		index = index+1
+	if txt[-2]=='\n' and txt[-1]=='\n':
+		txt = txt[:-1]
+	return txt
 			
 
 
@@ -77,17 +88,23 @@ def txt_to_train_data(txt):
 	return np.array(result)
 
 
-#filename = "..\\data\\rawdata\\gutenberg\\8692-0.txt"
-filename = "test-tokenized.txt"
-#result = "test-tokenized-retest-ensuite.txt"
-
-#delStartAndEnd(filename, result)
-sentencePerLine(filename)
 
 
+start = time.time()
+delStartAndEnd("data/tokenized/8692-0-tokenized.txt","data/test/8692_v1.txt")
+txt = loadFiletxt("data/test/8692_v1.txt")
+txt = sentencePerLine(txt)
+txt = delEmptyLines(txt)
 
-#x_train = loadFiletxt("data/tokenized/8692-0-tokenized.txt")#+loadFiletxt("data/tokenized/8693-0-tokenized.txt")+loadFiletxt("data/tokenized/13737-0-tokenized.txt")
-#y_train = loadFiletxt("data/normalised/8692-0-normalised.txt")#+loadFiletxt("data/normalised/8692-0-normalised.txt")+loadFiletxt("data/normalised/8692-0-normalised.txt")
+f=open('data/test/test_after.txt','w+')
+
+f.write(txt)
+f.close()
+print(time.time() - start)
+
+
+#x_train = loadFiletxt("data/tokenized/8692-0-tokenized.txt")+loadFiletxt("data/tokenized/8693-0-tokenized.txt")+loadFiletxt("data/tokenized/13737-0-tokenized.txt")
+#y_train = loadFiletxt("data/normalised/8692-0-normalised.txt")+loadFiletxt("data/normalised/8692-0-normalised.txt")+loadFiletxt("data/normalised/8692-0-normalised.txt")
 
 #x_test = loadFiletxt("data/tokenized/14688-0-tokenized.txt")
 #y_test = loadFiletxt("data/normalised/14688-0-normalised.txt")
