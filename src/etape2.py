@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import sys
 input_path = "data/test/test_after_norm2.txt"
 output_path = sys.argv[1]
+=======
+input_path = "data/test/after_norm2.txt"
+ouput_path = "data/test/after_all.txt"
+>>>>>>> 18682f48f2c005096d86d74fb89393ce234a23ce
 
 def loadFiletxt(filename):
 	with open(filename, 'r') as f:
