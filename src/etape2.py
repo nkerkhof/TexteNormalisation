@@ -1,5 +1,8 @@
-input_path = "data/test/after_norm2.txt"
-ouput_path = "data/test/after_all.txt"
+
+import sys
+input_path = "data/test/test_after_norm2.txt"
+output_path = sys.argv[1]
+
 
 def loadFiletxt(filename):
 	with open(filename, 'r') as f:

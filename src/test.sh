@@ -1,0 +1,11 @@
+#!/bin/bash
+python ./src/etape1.py
+
+
+perl irisa-text-normalizer-master/bin/fr/basic-tokenizer.pl $1 > data/test/test_after.txt
+
+bash irisa-text-normalizer-master/bin/fr/generic-normalisation.sh data/test/test_after.txt > data/test/test_after_norm1.txt
+
+perl irisa-text-normalizer-master/bin/fr/specific-normalisation.pl irisa-text-normalizer-master/cfg/nlp_modified.cfg data/test/test_after_norm1.txt > data/test/test_after_norm2.txt
+
+python ./src/etape2.py $2

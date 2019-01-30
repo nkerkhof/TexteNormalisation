@@ -1,5 +1,9 @@
 input_path = "data/rawdata/gutenberg/8692-0.txt"
+<<<<<<< HEAD
+output_path = sys.argv[1]
+=======
 output_path = "data/test/8692-0-proc.txt"
+>>>>>>> 18682f48f2c005096d86d74fb89393ce234a23ce
 
 
 process_path = "data/test/test_proc.txt"
@@ -26,6 +30,14 @@ def delStartAndEnd(filename, result_filename):
     f.close()
 
 
+<<<<<<< HEAD
+def loadFiletxt(filename):
+	with open(filename, 'r') as f:
+		return f.read()
+
+
+=======
+>>>>>>> 18682f48f2c005096d86d74fb89393ce234a23ce
 def sentencePerLine(txt):
 	index = 1
 	while index < len(txt)-1:
@@ -55,3 +67,16 @@ def delEmptyLines(txt):
 		txt = txt[:-1]
 	return txt
 
+<<<<<<< HEAD
+
+delStartAndEnd(input_path, process_path)
+txt = loadFiletxt(process_path)
+txt = sentencePerLine(txt)
+txt = delEmptyLines(txt)
+
+f=open(output_path,'w+')
+f.write(txt)
+f.close()
+
+=======
+>>>>>>> 18682f48f2c005096d86d74fb89393ce234a23ce

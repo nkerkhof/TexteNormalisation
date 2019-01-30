@@ -13,7 +13,6 @@ import keras
 ####TODO: Vectoletter; essayer un reseau de neurones ####
 ######ATTENTION A LA MEMOIRE#####
 
-
 alpha = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZéèàùç€%$+*-!?.,:;&\"'()[]/=0123456789\n\t"
 
 def delStartAndEnd(filename, result_filename):
@@ -109,15 +108,11 @@ def txt_to_train_data(txt):
 #entrée : path_origine / path_dest_txt_test_after / path_dest_txt_test_after_norm2
 
 #start = time.time()
-#delStartAndEnd("data/rawdata/gutenberg/8692-0.txt","data/test/8692_v1.txt")
-#txt = loadFiletxt("data/test/8692_v1.txt")
+#delStartAndEnd("8693-0-tokenized.txt","8692_v1.txt")
+#txt = loadFiletxt("8692_v1.txt")
 #txt = sentencePerLine(txt)
 #txt = delEmptyLines(txt)
 
-#f=open('data/test/test_after.txt','w+')
-#f.write(txt)
-#f.close()
-#print(time.time() - start)
 
 f = open("data/test/test_after_petit.txt","r")
 lines_before = f.readlines()
@@ -182,24 +177,6 @@ model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
 model.fit([encoder_input_data, decoder_input_data], decoder_target_data, batch_size=batch_size, epochs=epochs, validation_split=0.2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
