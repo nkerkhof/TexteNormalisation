@@ -7,10 +7,14 @@ np.set_printoptions(threshold=np.inf)
 import numpy as np
 from keras.models import Model
 from keras.layers import Input, LSTM, Dense
+import keras
 
 
 ####TODO: Vectoletter; essayer un reseau de neurones ####
 ######ATTENTION A LA MEMOIRE#####
+
+
+alpha = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZéèàùç€%$+*-!?.,:;&\"'()[]/=0123456789\n\t"
 
 def delStartAndEnd(filename, result_filename):
     f = open(filename,"r")
@@ -76,9 +80,11 @@ def letterToVec(letter):
 		if letter == alpha[l]:
 			final[l] = 1
 			place = l
+			return place
 	if place==-1:
 		final[-1] = 1
-	return final
+		return sizeAB
+	#return final.tolist()
 
 def vecToLetter(vect):
   alpha = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZéèàùç€%$+*-!?.,:;&\"'()[]/=0123456789\n\t"
@@ -113,16 +119,71 @@ def txt_to_train_data(txt):
 #f.close()
 #print(time.time() - start)
 
-
-
-
-f = open("data/test/test_after.txt","r")
+f = open("data/test/test_after_petit.txt","r")
 lines_before = f.readlines()
 f.close()
 
-f = open("data/test/after_all.txt","r")
+f = open("data/test/after_all_petit.txt","r")
 lines_after = f.readlines()
 f.close()
+
+
+max_car_before = 0
+for l in lines_before:
+	if len(l)>max_car_before :
+		max_car_before = len(l)
+
+max_car_after = 0
+for l in lines_after:
+	if len(l)>max_car_after :
+		max_car_after = len(l)
+
+num_decoder_tokens = len(alpha)+1
+num_encoder_tokens = len(alpha)+1
+latent_dim = 128
+batch_size = 16
+epochs = 10
+
+encoder_input_data = np.zeros((len(lines_before), max_car_before, num_encoder_tokens), dtype='float32')
+decoder_input_data = np.zeros((len(lines_after), max_car_after, num_decoder_tokens), dtype='float32')
+decoder_target_data = np.zeros((len(lines_after), max_car_after, num_decoder_tokens), dtype='float32')
+
+for i_line in range(len(lines_before)):
+	for i_car in range(len(lines_before[i_line])):
+		encoder_input_data[i_line][i_car][letterToVec(lines_before[i_line][i_car])] = 1
+
+for i_line in range(len(lines_after)):
+	for i_car in range(len(lines_after[i_line])):
+		decoder_input_data[i_line][i_car][letterToVec(lines_after[i_line][i_car])] = 1
+	for i_car in range(1,len(lines_after[i_line])):
+		decoder_target_data[i_line][i_car-1][letterToVec(lines_after[i_line][i_car])] = 1
+	decoder_target_data[-1][-1][letterToVec(lines_after[-1][-1])] = 1
+
+print(encoder_input_data.shape)
+print(decoder_input_data.shape)
+print(decoder_target_data.shape)
+
+
+
+
+encoder_inputs = Input(shape=(None, num_encoder_tokens))
+encoder = LSTM(latent_dim, return_state=True)
+encoder_outputs, state_h, state_c = encoder(encoder_inputs)
+encoder_states = [state_h, state_c]
+
+decoder_inputs = Input(shape=(None, num_decoder_tokens))
+decoder_lstm = LSTM(latent_dim, return_sequences=True, return_state=True)
+decoder_outputs, _, _ = decoder_lstm(decoder_inputs, initial_state=encoder_states)
+decoder_dense = Dense(num_decoder_tokens, activation='softmax')
+decoder_outputs = decoder_dense(decoder_outputs)
+
+model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
+
+model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
+
+model.fit([encoder_input_data, decoder_input_data], decoder_target_data, batch_size=batch_size, epochs=epochs, validation_split=0.2)
+
+
 
 
 
